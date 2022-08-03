@@ -23,7 +23,16 @@ module.exports = {
   },
   updateProducts: async (req, res) => {
     try {
-      const results = await Products.update(req, res);
+      let reqModifier = {
+        ...req,
+      };
+      if(req.file) {
+        reqModifier = {
+          ...req,
+          body: { ...req.body, cover: req.file.filename },
+        }
+      }
+      const results = await Products.update(reqModifier, res);
       return res.status(201).send(results);
     } catch (error) {
       return res.status(400).send(error);

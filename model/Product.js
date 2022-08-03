@@ -1,5 +1,6 @@
 const db = require("../helper/db_connection");
 const moment = require('moment')
+const fs = require('fs')
 
 
 module.exports = {
@@ -33,7 +34,6 @@ module.exports = {
 
       db.query(sql, (err, results) => {
         if (err) {
-          console.log(err);
           reject({ message: "Something wrong" });
         }
         resolve({
@@ -68,7 +68,6 @@ module.exports = {
           if (req.body.cover) {
             fs.unlink(`uploads/products/${tempImg}`, function (err) {
               if (err) {
-                console.log(err);
                 reject({
                   message: "Something wrong",
                 });
@@ -80,11 +79,10 @@ module.exports = {
             `UPDATE products SET name='${name}', description='${description}', price='${price}', stock='${stock}', expiredDate='${expiredDate}', cover='${cover}'`,
             (err, results) => {
               if (err) {
-                console.log(err);
                 reject({ message: "Something wrong" });
               }
               resolve({
-                message: "Update movies success",
+                message: "Update product success",
                 status: 201,
                 data: results,
                 changed: { ...req.body },
@@ -111,7 +109,6 @@ module.exports = {
               `DELETE FROM products WHERE product_id=${product_id}`,
               (err, results) => {
                 if (err) {
-                  console.log(err);
                   reject({ message: "Something wrong" });
                 }
                 fs.unlink(`uploads/products/${tempImg}`, function (err) {
@@ -123,7 +120,7 @@ module.exports = {
                     });
                   }
                   resolve({
-                    message: "Delete product success hihihi",
+                    message: "Delete product success",
                     status: 201,
                     data: results,
                   });
