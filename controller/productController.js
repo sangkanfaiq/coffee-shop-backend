@@ -9,6 +9,14 @@ module.exports = {
       return res.send(error);
     }
   },
+  getProductById: async (req, res) => {
+    try {
+      const results = await Products.getById(req, res);
+      return res.status(200).send(results);
+    } catch (error) {
+      return res.send(error);
+    }
+  },
   addNewProducts: async (req, res) => {
     try {
         const reqModifier = {

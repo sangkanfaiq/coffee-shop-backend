@@ -26,6 +26,24 @@ module.exports = {
       });
     });
   },
+  getById: (req, res) => {
+    return new Promise((resolve, reject) => {
+      const { product_id } = req.params;
+      const sql = `SELECT * FROM products WHERE product_id=${product_id}`;
+      db.query(sql, (err, results) => {
+        if (err) {
+          reject({
+            message: "Something wrong",
+          });
+        }
+        resolve({
+          message: "Get product by id success",
+          status: 200,
+          data: results
+        });
+      });
+    });
+  },
   add: (req, res) => {
     return new Promise((resolve, reject) => {
       const { name, description, price, stock, expiredDate, cover } = req.body;
@@ -50,6 +68,7 @@ module.exports = {
   update: (req, res) => {
     return new Promise((resolve, reject) => {
       const { product_id } = req.params;
+      console.log(product_id)
       db.query(
         `SELECT * FROM products WHERE product_id=${product_id}`,
         (err, results) => {
@@ -68,6 +87,7 @@ module.exports = {
           if (req.body.cover) {
             fs.unlink(`uploads/products/${tempImg}`, function (err) {
               if (err) {
+                console.log(err)
                 reject({
                   message: "Something wrong",
                 });
@@ -76,9 +96,10 @@ module.exports = {
           }
 
           db.query(
-            `UPDATE products SET name='${name}', description='${description}', price='${price}', stock='${stock}', expiredDate='${expiredDate}', cover='${cover}'`,
+            `UPDATE products SET name='${name}', description='${description}', price='${price}', stock='${stock}', expiredDate='${expiredDate}', cover='${cover}' WHERE product_id='${product_id}'`,
             (err, results) => {
               if (err) {
+                console.log(err)
                 reject({ message: "Something wrong" });
               }
               resolve({
